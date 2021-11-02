@@ -1,0 +1,36 @@
+{
+  "user": [
+    {
+      "username": "ooo",
+      "password": "ooo",
+      "urls": [
+        {
+          "creationDate": "ooo",
+          "redirectCount": 1,
+          "originalUrl": "sjsjjsjss",
+          "shorturl-id": "ssss"
+        }
+      ]
+    }
+  ],
+  "short_urls": [
+    {
+      "creationDate": "ooo",
+      "redirectCount": 1,
+      "originalUrl": "sjsjjsjss",
+      "shorturl-id": "ssss"
+    },
+    {
+      "creationDate": "November 2nd 2021, 6:33:50 pm",
+      "redirectCount": 0,
+      "originalUrl": "http://localhost:3000/api/shorturl",
+      "shorturl": "kGD-XvbZc"
+    },
+    {
+      "creationDate": "November 2nd 2021, 7:04:00 pm",
+      "redirectCount": 2,
+      "originalUrl": "https://www.youtube.com/watch?v=Ud5xKCYQTjM&t=316s",
+      "shorturl": "OU9xtDUaL"
+    }
+  ]
+}
