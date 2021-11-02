@@ -22,4 +22,7 @@ class DataBase {
   }
 }
 
+let nina = new DataBase("myurl");
+console.log(nina.getSingleDataBase());
+
 module.exports = DataBase;
