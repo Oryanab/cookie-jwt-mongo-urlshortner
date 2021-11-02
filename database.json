@@ -1,9 +1,10 @@
 {
-  "user": [
+  "users_database": [
     {
-      "username": "ooo",
+      "name": "ooo",
+      "email": "or@gmail.com",
       "password": "ooo",
-      "urls": [
+      "user-urls": [
         {
           "creationDate": "ooo",
           "redirectCount": 1,
