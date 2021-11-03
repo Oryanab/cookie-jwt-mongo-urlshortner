@@ -4,6 +4,7 @@ const userRouter = express.Router();
 const userDataBaseClass = require("./url_class").UserDataBase;
 const fs = require("fs");
 const path = require("path");
+const errorMiddleware = require("../middleware/userMiddleware");
 
 /*
     get database
@@ -26,17 +27,26 @@ function saveDataBase(dataBaseJson) {
 /*
       sign up the user
 */
-userRouter.post("/sign-up", (req, res) => {
-  let database = returnDataBase();
-  let newUser = new userDataBaseClass(
-    req.body.name,
-    req.body.email,
-    req.body.password
-  );
-  database["users_database"].push(newUser);
-  saveDataBase(database);
-  res.status(200).json({ message: "Successfully Registered", status: 200 });
-});
+const usernameValidator = errorMiddleware.middlewareSignUpUsername;
+const emailValidator = errorMiddleware.middlewareSignUpEmail;
+const passwordValidator = errorMiddleware.middlewareSignUpPassword;
+userRouter.post(
+  "/sign-up",
+  usernameValidator,
+  emailValidator,
+  passwordValidator,
+  (req, res) => {
+    let database = returnDataBase();
+    let newUser = new userDataBaseClass(
+      req.body.name,
+      req.body.email,
+      req.body.password
+    );
+    database["users_database"].push(newUser);
+    saveDataBase(database);
+    res.status(200).json({ message: "Successfully Registered", status: 200 });
+  }
+);
 
 /*
       sign up the user

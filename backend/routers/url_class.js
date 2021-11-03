@@ -1,15 +1,15 @@
 "use strict";
 const moment = require("moment");
-const shortid = require("shortid");
+
 /*
   url DataBase
 */
 class DataBase {
-  constructor(originalUrl) {
+  constructor(originalUrl, shortid) {
     this.creationDate = moment().format("MMMM Do YYYY, h:mm:ss a");
     this.redirectCount = 0;
     this.originalUrl = originalUrl;
-    this.shorturl = shortid.generate();
+    this.shorturl = shortid;
   }
 
   getSingleDataBase() {

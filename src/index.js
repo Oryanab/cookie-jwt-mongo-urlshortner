@@ -1,5 +1,6 @@
 "use strict";
 import style from "./styles.css";
+const shortid = require("shortid");
 
 const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");
@@ -80,25 +81,22 @@ document.getElementById("convert").addEventListener("click", async (e) => {
   const currentUser = document.getElementById("guestName").textContent;
   const originalUrl = document.getElementById("originalUrl");
   const shortenUrl = "http://localhost:3000/api/shorturl ";
-  if (originalUrl.value.length > 8) {
-    try {
-      const shortenOriginalUrl = await axios({
-        method: "POST",
-        url: shortenUrl,
-        data: {
-          url: originalUrl.value,
-          username: currentUser,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      showShortUrl(shortenOriginalUrl);
-    } catch {
-      alert("Try again later");
-    }
-  } else {
-    alert("url is not valid");
+  try {
+    const shortenOriginalUrl = await axios({
+      method: "POST",
+      url: shortenUrl,
+      data: {
+        url: originalUrl.value,
+        shortid: shortid.generate(),
+        username: currentUser,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    showShortUrl(shortenOriginalUrl);
+  } catch (err) {
+    alert(err.response.data.message);
   }
 });
 
@@ -133,8 +131,8 @@ document.getElementById("login").addEventListener("click", async (e) => {
       if (loginAttempt.status === 200) {
         showUserPanel(loginAttempt.data.username);
       }
-    } catch (e) {
-      alert("something wrong with the email or password");
+    } catch (err) {
+      alert(err.response.data.message);
     }
   } else {
     alert("please enter a valid email");
@@ -149,11 +147,7 @@ document.getElementById("sign-up").addEventListener("click", async (e) => {
   const signUpEmail = document.getElementById("sign-up-email").value;
   const signUpPassword = document.getElementById("sign-up-password").value;
   const signUpUrl = "http://localhost:3000/user/sign-up";
-  if (
-    signUpEmail.length > 6 &&
-    signUpPassword.length > 0 &&
-    signUpName.length > 0
-  ) {
+  if (signUpName.length > 0) {
     try {
       const signUpAttempt = await axios({
         method: "POST",
@@ -171,8 +165,8 @@ document.getElementById("sign-up").addEventListener("click", async (e) => {
         alert(signUpAttempt.data.message);
         container.classList.remove("right-panel-active");
       }
-    } catch (e) {
-      alert("something wrong with the email or password");
+    } catch (err) {
+      alert(err.response.data.message);
     }
   } else {
     alert("please enter valid information");
@@ -192,6 +186,7 @@ function createRow(link) {
   rowLink.classList.add("link");
   const newlink = document.createElement("a");
   newlink.setAttribute("href", link);
+  newlink.setAttribute("target", "_blank");
   newlink.textContent = link;
 
   // append all together
@@ -216,7 +211,7 @@ document
     });
     if (getUserData.data.length > 0) {
       for (let url of getUserData.data) {
-        createRow(`http://localhost:3000/${url.shorturl}`);
+        createRow(`http://localhost:3000/cybr/${url.shorturl}`);
       }
     } else {
       alert("no previous links");
