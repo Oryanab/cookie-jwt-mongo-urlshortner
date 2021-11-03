@@ -1,6 +1,7 @@
+"use strict";
 const express = require("express");
 const shortUrlRouter = express.Router();
-const databaseClass = require("./url_class");
+const databaseClass = require("./url_class").DataBase;
 const fs = require("fs");
 const path = require("path");
 
@@ -24,9 +25,28 @@ function saveDataBase(dataBaseJson) {
 
 shortUrlRouter.post("/", (req, res) => {
   let databaseUrl = returnDataBase();
-  databaseUrl["short_urls"].push(new databaseClass(req.body.url));
-  saveDataBase(databaseUrl);
-  res.json(databaseUrl);
+  let allUsers = databaseUrl["users_database"];
+  let newShortenUrl = new databaseClass(req.body.url);
+  if (req.body.username !== "Guest") {
+    try {
+      const currentUser =
+        allUsers[
+          allUsers.indexOf(
+            allUsers.find(({ username }) => username === req.body.username)
+          )
+        ];
+      currentUser["user_urls"].push(newShortenUrl);
+      databaseUrl["short_urls"].push(newShortenUrl);
+      saveDataBase(databaseUrl);
+      res.status(200).json(newShortenUrl);
+    } catch (e) {
+      res.sendStatus(404);
+    }
+  } else {
+    databaseUrl["short_urls"].push(newShortenUrl);
+    saveDataBase(databaseUrl);
+    res.json(newShortenUrl);
+  }
 });
 
 module.exports = shortUrlRouter;

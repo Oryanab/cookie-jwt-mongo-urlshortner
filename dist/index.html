@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>cybr-url shorter</title>
   <script defer src="main.bundle.js"></script></head>
   <body>
     <div class="container" id="container">
-      <div class="form-container sign-up-container">
+      <div id="signup-div" class="form-container sign-up-container">
         <form action="#">
           <h1>Create Account</h1>
           <div class="social-container">
@@ -24,20 +24,20 @@
           <button>Sign Up</button>
         </form>
       </div>
-      <div class="form-container sign-in-container">
+      <div id="login-div" class="form-container sign-in-container">
         <form action="#">
           <h1>Login</h1>
           <div class="social-container">
             <p style="margin-bottom: 10px">Enter as a Guest</p>
-            <button>Guest</button>
+            <button id="guest">Guest</button>
           </div>
           <span>or use your account</span>
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
-          <button>Login</button>
+          <input id="login-email" type="email" placeholder="Email" />
+          <input id="login-password" type="password" placeholder="Password" />
+          <button id="login">Login</button>
         </form>
       </div>
-      <div class="overlay-container">
+      <div id="overlay-div" class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
             <h1>Already Have An Account? Please Login</h1>
@@ -53,23 +53,39 @@
           </div>
         </div>
       </div>
-      <div class="form-container user-in-container" hidden>
+      <div
+        style="display: none"
+        id="user-in"
+        class="form-container user-in-container"
+      >
         <form action="#">
           <h1 style="text-align: left">
-            Hello <span style="font-size: 32px; color: orangered"></span>,
-            Shorten Your Url!
+            Hello
+            <span
+              id="guestName"
+              style="font-size: 32px; color: orangered"
+            ></span
+            >, Shorten Your Url!
           </h1>
           <div class="social-container">
             <a href="#" class="social" hidden>📝</a>
             <a href="#" class="social">❓</a>
           </div>
-          <input type="url" placeholder="enter a url" />
-          <button>convert</button>
-          <input type="url" placeholder="your shorten url will appear here!" />
+          <input id="originalUrl" type="url" placeholder="enter a url" />
+          <button id="convert">convert</button>
+          <input
+            id="shortenUrl"
+            type="url"
+            placeholder="your shorten url will appear here!"
+          />
           <p>Show A List of all your urls?</p>
           <div style="display: flex; justify-content: space-evenly">
-            <button style="margin: 10px" hidden>Show List</button>
-            <button style="margin: 10px" hidden>Logout</button>
+            <button id="show-list-user-in" style="margin: 10px" hidden>
+              Show List
+            </button>
+            <button id="logout-user-in" style="margin: 10px" hidden>
+              Logout
+            </button>
             <button id="sign-up-user-in" style="margin: 10px">Sign-up</button>
           </div>
         </form>

@@ -22,7 +22,25 @@ class DataBase {
   }
 }
 
-let nina = new DataBase("myurl");
-console.log(nina.getSingleDataBase());
+class UserDataBase {
+  constructor(username, email, password) {
+    (this.username = username),
+      (this.email = email),
+      (this.password = password),
+      (this.user_urls = []);
+  }
 
-module.exports = DataBase;
+  getSingleDataBase() {
+    return new DataBase(
+      this.username,
+      this.email,
+      this.password,
+      this.user_urls
+    );
+  }
+}
+
+// let nina = new DataBase("myurl");
+// console.log(nina.getSingleDataBase());
+
+module.exports = { DataBase, UserDataBase };

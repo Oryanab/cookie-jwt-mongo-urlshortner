@@ -6,5 +6,23 @@ POST http://localhost:3000/api/shorturl
 Content-Type: application/json 
 
 {
-    "url": "https://www.youtube.com/watch?v=Ud5xKCYQTjM&t=316s"
+    "url": "https://flexboxfroggy.com/",
+    "username": "Oryan"
 }
+
+# POST http://localhost:3000/user/sign-up
+# Content-Type: application/json 
+
+# {
+#     "name": "Oryan",
+#     "email": "Oryan@gmail.com",
+#     "password": "Oryan"
+# }
+
+# POST http://localhost:3000/user/login
+# Content-Type: application/json 
+
+# {
+#     "email": "Oryan@gmail.com",
+#     "password": "Oryan"
+# }
