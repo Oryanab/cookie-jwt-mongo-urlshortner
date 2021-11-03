@@ -109,7 +109,7 @@ document.getElementById("convert").addEventListener("click", async (e) => {
 function showShortUrl(ResponseJson) {
   document.getElementById(
     "shortenUrl"
-  ).value = `/cybr/${ResponseJson.data.shorturl}`;
+  ).value = `https://protected-wildwood-48114.herokuapp.com/cybr/${ResponseJson.data.shorturl}`;
 }
 
 /*
@@ -218,7 +218,9 @@ document
     });
     if (getUserData.data.length > 0) {
       for (let url of getUserData.data) {
-        createRow(`/cybr/${url.shorturl}`);
+        createRow(
+          `https://protected-wildwood-48114.herokuapp.com/cybr/${url.shorturl}`
+        );
       }
       notyf.success("Success!");
     } else {
