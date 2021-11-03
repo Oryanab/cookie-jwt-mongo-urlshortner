@@ -132,8 +132,6 @@ document.getElementById("login").addEventListener("click", async (e) => {
       });
       if (loginAttempt.status === 200) {
         showUserPanel(loginAttempt.data.username);
-      } else {
-        alert("Try again later");
       }
     } catch (e) {
       alert("something wrong with the email or password");
@@ -144,12 +142,83 @@ document.getElementById("login").addEventListener("click", async (e) => {
 });
 
 /*
-# POST http://localhost:3000/user/login
-# Content-Type: application/json 
-
-# {
-#     "email": "Oryan@gmail.com",
-#     "password": "Oryan"
-# }
-
+  sign up a user
 */
+document.getElementById("sign-up").addEventListener("click", async (e) => {
+  const signUpName = document.getElementById("sign-up-name").value;
+  const signUpEmail = document.getElementById("sign-up-email").value;
+  const signUpPassword = document.getElementById("sign-up-password").value;
+  const signUpUrl = "http://localhost:3000/user/sign-up";
+  if (
+    signUpEmail.length > 6 &&
+    signUpPassword.length > 0 &&
+    signUpName.length > 0
+  ) {
+    try {
+      const signUpAttempt = await axios({
+        method: "POST",
+        url: signUpUrl,
+        data: {
+          name: signUpName,
+          email: signUpEmail,
+          password: signUpPassword,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (signUpAttempt.status === 200) {
+        alert(signUpAttempt.data.message);
+        container.classList.remove("right-panel-active");
+      }
+    } catch (e) {
+      alert("something wrong with the email or password");
+    }
+  } else {
+    alert("please enter valid information");
+  }
+});
+
+/*
+  user is able to see all his shorten urls
+*/
+
+function createRow(link) {
+  const parentDivBottom = document.getElementById("bottom");
+  // create the row
+  const row = document.createElement("div");
+  row.classList.add("row");
+  const rowLink = document.createElement("div");
+  rowLink.classList.add("link");
+  const newlink = document.createElement("a");
+  newlink.setAttribute("href", link);
+  newlink.textContent = link;
+
+  // append all together
+  rowLink.append(newlink);
+  row.append(rowLink);
+  parentDivBottom.append(row);
+}
+
+document
+  .querySelector(".second-container")
+  .addEventListener("click", async (e) => {
+    const currentUser = document.getElementById("guestName").textContent;
+    const allShortUrls = "http://localhost:3000/user/all-short-urls";
+    const getUserData = await axios({
+      method: "GET",
+      url: allShortUrls,
+      data: {},
+      headers: {
+        "Content-Type": "application/json",
+        username: currentUser,
+      },
+    });
+    if (getUserData.data.length > 0) {
+      for (let url of getUserData.data) {
+        createRow(`http://localhost:3000/${url.shorturl}`);
+      }
+    } else {
+      alert("no previous links");
+    }
+  });

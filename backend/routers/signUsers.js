@@ -35,7 +35,7 @@ userRouter.post("/sign-up", (req, res) => {
   );
   database["users_database"].push(newUser);
   saveDataBase(database);
-  res.json(newUser);
+  res.status(200).json({ message: "Successfully Registered", status: 200 });
 });
 
 /*
@@ -62,14 +62,14 @@ userRouter.post("/login", (req, res) => {
   }
 });
 
-userRouter.get("/:username/all-short-urls", (req, res) => {
+userRouter.get("/all-short-urls", (req, res) => {
   let database = returnDataBase();
   let allUsers = database["users_database"];
   try {
     const currentUser =
       allUsers[
         allUsers.indexOf(
-          allUsers.find(({ username }) => username === req.params.username)
+          allUsers.find(({ username }) => username === req.headers.username)
         )
       ];
     res.status(200).json(currentUser.user_urls);
