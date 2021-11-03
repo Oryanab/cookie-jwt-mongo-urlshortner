@@ -35,7 +35,7 @@ function showUserPanerlButtons() {
   document.getElementById("logout-user-in").style.display = "block";
   document.getElementById("logout-user-in").addEventListener("click", (e) => {
     e.preventDefault();
-    e.stopImmediatePropagation();
+    e.stopPropagation();
     resetInputFields();
     hideUserPanel();
     hideUserPanerlButtons();
