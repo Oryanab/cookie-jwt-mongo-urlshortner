@@ -85,7 +85,7 @@ document.getElementById("convert").addEventListener("click", async (e) => {
   e.preventDefault();
   const currentUser = document.getElementById("guestName").textContent;
   const originalUrl = document.getElementById("originalUrl");
-  const shortenUrl = "http://localhost:3000/api/shorturl ";
+  const shortenUrl = "/api/shorturl ";
   try {
     const shortenOriginalUrl = await axios({
       method: "POST",
@@ -109,7 +109,7 @@ document.getElementById("convert").addEventListener("click", async (e) => {
 function showShortUrl(ResponseJson) {
   document.getElementById(
     "shortenUrl"
-  ).value = `http://localhost:3000/cybr/${ResponseJson.data.shorturl}`;
+  ).value = `/cybr/${ResponseJson.data.shorturl}`;
 }
 
 /*
@@ -120,7 +120,7 @@ document.getElementById("login").addEventListener("click", async (e) => {
   e.preventDefault();
   const loginEmail = document.getElementById("login-email").value;
   const loginPassword = document.getElementById("login-password").value;
-  const loginUrl = "http://localhost:3000/user/login";
+  const loginUrl = "/user/login";
   if (loginEmail.length > 6 && loginPassword.length > 0) {
     try {
       const loginAttempt = await axios({
@@ -153,7 +153,7 @@ document.getElementById("sign-up").addEventListener("click", async (e) => {
   const signUpName = document.getElementById("sign-up-name").value;
   const signUpEmail = document.getElementById("sign-up-email").value;
   const signUpPassword = document.getElementById("sign-up-password").value;
-  const signUpUrl = "http://localhost:3000/user/sign-up";
+  const signUpUrl = "/user/sign-up";
   if (signUpName.length > 0) {
     try {
       const signUpAttempt = await axios({
@@ -206,7 +206,7 @@ document
   .querySelector(".second-container")
   .addEventListener("click", async (e) => {
     const currentUser = document.getElementById("guestName").textContent;
-    const allShortUrls = "http://localhost:3000/user/all-short-urls";
+    const allShortUrls = "/user/all-short-urls";
     const getUserData = await axios({
       method: "GET",
       url: allShortUrls,
@@ -218,7 +218,7 @@ document
     });
     if (getUserData.data.length > 0) {
       for (let url of getUserData.data) {
-        createRow(`http://localhost:3000/cybr/${url.shorturl}`);
+        createRow(`/cybr/${url.shorturl}`);
       }
       notyf.success("Success!");
     } else {
