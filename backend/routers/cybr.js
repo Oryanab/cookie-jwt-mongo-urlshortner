@@ -24,12 +24,17 @@ function saveDataBase(dataBaseJson) {
 cybrRouter.get("/:shorturl", (req, res) => {
   let originalDataBase = returnDataBase();
   let databaseUrl = originalDataBase["short_urls"];
-  let urlDatabaseUnit = databaseUrl.indexOf(
-    databaseUrl.find(({ shorturl }) => shorturl === req.params.shorturl)
-  );
-  databaseUrl[urlDatabaseUnit].redirectCount++;
-  saveDataBase(originalDataBase);
-  res.redirect(databaseUrl[urlDatabaseUnit].originalUrl);
+  try {
+    let urlDatabaseUnit = databaseUrl.indexOf(
+      databaseUrl.find(({ shorturl }) => shorturl === req.params.shorturl)
+    );
+    databaseUrl[urlDatabaseUnit].redirectCount++;
+    saveDataBase(originalDataBase);
+    res.redirect(databaseUrl[urlDatabaseUnit].originalUrl);
+  } catch (err) {
+    res.redirect("https://protected-wildwood-48114.herokuapp.com/");
+    res.status(404).json({ message: "This Url Is Not Exist", status: 404 });
+  }
 });
 
 module.exports = cybrRouter;
