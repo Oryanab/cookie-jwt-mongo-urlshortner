@@ -35,7 +35,6 @@ function showUserPanerlButtons() {
   document.getElementById("logout-user-in").style.display = "block";
   document.getElementById("logout-user-in").addEventListener("click", (e) => {
     e.preventDefault();
-    e.stopPropagation();
     resetInputFields();
     hideUserPanel();
     hideUserPanerlButtons();
@@ -56,6 +55,7 @@ function hideUserPanerlButtons() {
   document.getElementById("logout-user-in").style.display = "none";
   document.getElementById("sign-up-user-in").addEventListener("click", (e) => {
     e.preventDefault();
+    e.stopImmediatePropagation();
     resetInputFields();
     hideUserPanel();
     hideUserPanerlButtons();
