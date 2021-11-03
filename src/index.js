@@ -1,6 +1,7 @@
 "use strict";
 import style from "./styles.css";
 const shortid = require("shortid");
+const notyf = new Notyf();
 
 const signUpButton = document.getElementById("signUp");
 const signInButton = document.getElementById("signIn");
@@ -33,9 +34,11 @@ function showUserPanerlButtons() {
   document.getElementById("show-list-user-in").style.display = "block";
   document.getElementById("logout-user-in").style.display = "block";
   document.getElementById("logout-user-in").addEventListener("click", (e) => {
+    e.stopImmediatePropagation();
     resetInputFields();
     hideUserPanel();
     hideUserPanerlButtons();
+    notyf.success("Logged Out Successfully!");
   });
 }
 
@@ -56,6 +59,7 @@ function hideUserPanerlButtons() {
     hideUserPanel();
     hideUserPanerlButtons();
     container.classList.add("right-panel-active");
+    notyf.success("Logged out to Sign-up Area");
   });
 }
 
@@ -70,6 +74,7 @@ guestButton.addEventListener("click", (e) => {
   e.preventDefault();
   showUserPanel("Guest");
   hideUserPanerlButtons();
+  notyf.success("Welcome, New Guest!");
 });
 
 /*
@@ -95,8 +100,9 @@ document.getElementById("convert").addEventListener("click", async (e) => {
       },
     });
     showShortUrl(shortenOriginalUrl);
+    notyf.success("Converted Successfully!");
   } catch (err) {
-    alert(err.response.data.message);
+    notyf.error(err.response.data.message);
   }
 });
 
@@ -130,12 +136,13 @@ document.getElementById("login").addEventListener("click", async (e) => {
       });
       if (loginAttempt.status === 200) {
         showUserPanel(loginAttempt.data.username);
+        notyf.success("Successful Login!");
       }
     } catch (err) {
-      alert(err.response.data.message);
+      notyf.error(err.response.data.message);
     }
   } else {
-    alert("please enter a valid email");
+    notyf.error("please enter a valid email");
   }
 });
 
@@ -162,14 +169,14 @@ document.getElementById("sign-up").addEventListener("click", async (e) => {
         },
       });
       if (signUpAttempt.status === 200) {
-        alert(signUpAttempt.data.message);
+        notyf.success(signUpAttempt.data.message);
         container.classList.remove("right-panel-active");
       }
     } catch (err) {
-      alert(err.response.data.message);
+      notyf.error(err.response.data.message);
     }
   } else {
-    alert("please enter valid information");
+    notyf.error("please enter valid information");
   }
 });
 
@@ -213,7 +220,8 @@ document
       for (let url of getUserData.data) {
         createRow(`http://localhost:3000/cybr/${url.shorturl}`);
       }
+      notyf.success("Success!");
     } else {
-      alert("no previous links");
+      notyf.error("no previous links");
     }
   });
