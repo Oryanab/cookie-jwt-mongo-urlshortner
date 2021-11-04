@@ -111,7 +111,7 @@ document.getElementById("convert").addEventListener("click", async (e) => {
 function showShortUrl(ResponseJson) {
   document.getElementById(
     "shortenUrl"
-  ).value = `https://protected-wildwood-48114.herokuapp.com/cybr/${ResponseJson.data.shorturl}`;
+  ).value = `https://cybr-url-shortener.herokuapp.com/cybr/${ResponseJson.data.shorturl}`;
 }
 
 /*
