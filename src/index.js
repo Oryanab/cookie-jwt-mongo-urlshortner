@@ -221,7 +221,7 @@ document
     if (getUserData.data.length > 0) {
       for (let url of getUserData.data) {
         createRow(
-          `https://protected-wildwood-48114.herokuapp.com/cybr/${url.shorturl}`
+          `https://cybr-url-shortener.herokuapp.com/cybr/${url.shorturl}`
         );
       }
       notyf.success("Success!");
