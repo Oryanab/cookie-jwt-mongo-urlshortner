@@ -1,3 +1,8 @@
 node_modules
 test
 request.rest
+src
+webpack.config.js
+README.md
+.eslintrc.js
+.setting.json
