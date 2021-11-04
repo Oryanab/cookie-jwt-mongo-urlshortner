@@ -17,7 +17,7 @@ app.use("/cybr", redirectRouter);
 app.use("/user", userRouter);
 // app.use("/users", userRouter);
 
-app.use("/", express.static("./dist")); // serve main path as static dir
+app.use("/", express.static(__dirname + "/dist")); // serve main path as static dir
 app.get("/", function (req, res) {
   // serve main path as static file
   res.sendFile(path.resolve("./dist/index.html"));
