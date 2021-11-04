@@ -2,7 +2,7 @@
   "name": "url-shortener",
   "version": "1.0.0",
   "description": "In this project you will create your own [URL shortener](https://en.wikipedia.org/wiki/URL_shortening)!",
-  "main": "index.js",
+  "main": "./dist/index.html",
   "scripts": {
     "dev": "nodemon ./backend/app.js",
     "start": "webpack server",
