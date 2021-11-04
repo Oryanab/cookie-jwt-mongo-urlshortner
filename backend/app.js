@@ -3,7 +3,6 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = process.env.PORT || 3000;
 
 const shorturlRouter = require("./routers/shorturl");
 const redirectRouter = require("./routers/cybr");
@@ -24,4 +23,4 @@ app.get("/", function (req, res) {
   res.sendFile(path.resolve("./dist/index.html"));
 });
 
-app.listen(port);
+app.listen(process.env.PORT || 3000, () => console.log("Server is running..."));
