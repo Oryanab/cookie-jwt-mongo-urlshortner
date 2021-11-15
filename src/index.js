@@ -13,6 +13,40 @@ const overlayDiv = document.getElementById("overlay-div");
 const userInDiv = document.getElementById("user-in");
 const guestButton = document.getElementById("guest");
 
+window.addEventListener("load", async (e) => {
+  const authUrl = "/user/authorization";
+  try {
+    const getUserData = await axios({
+      method: "GET",
+      url: authUrl,
+      data: {},
+      headers: {
+        Authorization: `Bearer ${getCookie("userToken")}`,
+      },
+    });
+    showUserPanel(getUserData.data.username);
+    notyf.success("Successful Login!");
+  } catch (err) {
+    notyf.error("please sign up");
+  }
+});
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(";");
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 signUpButton.addEventListener("click", () => {
   container.classList.add("right-panel-active");
 });
@@ -115,6 +149,20 @@ function showShortUrl(ResponseJson) {
 }
 
 /*
+  insert user login cookie
+*/
+function createUserAuthCookie(name, value, hours) {
+  if (hours) {
+    var date = new Date();
+    date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+    var expires = "; expires=" + date.toGMTString();
+  } else {
+    var expires = "";
+  }
+  document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+/*
   Login a user
 */
 
@@ -138,6 +186,9 @@ document.getElementById("login").addEventListener("click", async (e) => {
       });
       if (loginAttempt.status === 200) {
         showUserPanel(loginAttempt.data.username);
+        document.cookie =
+          "userToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+        createUserAuthCookie("userToken", loginAttempt.data.accessToken, 1);
         notyf.success("Successful Login!");
       }
     } catch (err) {

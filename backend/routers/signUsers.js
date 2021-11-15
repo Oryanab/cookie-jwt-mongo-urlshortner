@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 const { User } = require("../database/mongoUsers");
 const jwt = require("jsonwebtoken");
 const bycrypt = require("bcrypt");
+require("dotenv").config();
 
 /*
     get database
@@ -83,10 +84,21 @@ userRouter.post(
 */
 userRouter.post("/login", (req, res) => {
   try {
-    User.find({ email: req.body.email })
+    User.findOne({ email: req.body.email })
       .then((currentUser) => {
-        if (bycrypt.compare(req.body.password, currentUser[0].password)) {
-          res.status(200).json({ username: currentUser[0].username });
+        if (bycrypt.compare(req.body.password, currentUser.password)) {
+          // Auth The Cookie
+          const username = currentUser.username;
+          const loggedUser = { name: username };
+          // in terminal: require('crypto').randomBytes(64).toString('hex')
+          const accessToken = jwt.sign(loggedUser, process.env.SECRET_TOKEN, {
+            expiresIn: "1m",
+          });
+          //document.cookie = `accessToken:${accessToken}` + new Date(day.getDate() + 1);
+          res.json({
+            username: currentUser.username,
+            accessToken: accessToken,
+          });
         } else {
           res.status(401).json({ message: "Wrong Password", status: 401 });
         }
@@ -114,5 +126,21 @@ userRouter.get("/all-short-urls", (req, res) => {
     res.sendStatus(404);
   }
 });
+
+userRouter.get("/check", authenticateToken, (req, res) => {
+  res.json({ username: req.user.name });
+});
+// Auth jwt middleware
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    //console.log(err);
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
 
 module.exports = userRouter;
