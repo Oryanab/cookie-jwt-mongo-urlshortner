@@ -72,14 +72,6 @@ userRouter.post(
   // emailValidator,
   // passwordValidator,
   async (req, res) => {
-    // let database = returnDataBase();
-    // let newUser = new userDataBaseClass(
-    //   req.body.name,
-    //   req.body.email,
-    //   req.body.password
-    // );
-    // database["users_database"].push(newUser);
-    // saveDataBase(database);
     let encryptedPassword = await encryptPassword(req.body.password);
     signUpNewUser(req.body.name, req.body.email, encryptedPassword);
     res.status(200).json({ message: "Successfully Registered", status: 200 });
@@ -90,10 +82,7 @@ userRouter.post(
       sign up the user
 */
 userRouter.post("/login", (req, res) => {
-  //let database = returnDataBase();
-  //let allUsers = database["users_database"];
   try {
-    //const currentUser = isEmailUserExist(req.body.email);
     User.find({ email: req.body.email })
       .then((currentUser) => {
         if (bycrypt.compare(req.body.password, currentUser[0].password)) {
@@ -105,9 +94,6 @@ userRouter.post("/login", (req, res) => {
       .catch((err) => {
         return false;
       });
-    // allUsers[
-    //   allUsers.indexOf(allUsers.find(({ email }) => email === req.body.email))
-    // ];
   } catch (e) {
     res.status(404).json({ message: "User Must Sign Up", status: 404 });
   }

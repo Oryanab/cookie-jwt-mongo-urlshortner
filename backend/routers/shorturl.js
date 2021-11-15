@@ -64,8 +64,7 @@ function uploadNewShortUrlToUser(username, url, shortid) {
 function findUrlJsonByShortId(ShortId) {
   Url.find({ shorturl: ShortId })
     .then((result) => {
-      console.log(result);
-      return result;
+      return result[0];
     })
     .catch((err) => {
       return err;
