@@ -7,7 +7,8 @@
 
 # {
 #     "url": "https://flexboxfroggy.com/",
-#     "username": "Oryan"
+#     "shortid": "12345",
+#     "username": "Moshe"
 # }
 
 # POST http://localhost:3000/user/sign-up
@@ -15,13 +16,21 @@
 
 # {
 #     "name": "Moshe",
-#     "email": "Moshe@gmail.com",
+#     "email": "Mos@gmail.com",
 #     "password": "oryan"
 # }
 
-GET http://localhost:3000/user/all-short-urls
+POST http://localhost:3000/user/login
 Content-Type: application/json 
 
 {
-    "username": "Oryan"
+    "email": "Mos@gmail.com",
+    "password": "oryan"
 }
+
+# GET http://localhost:3000/user/all-short-urls
+# Content-Type: application/json 
+
+# {
+#     "username": "Oryan"
+# }

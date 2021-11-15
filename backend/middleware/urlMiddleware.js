@@ -3,6 +3,8 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const validator = require("validator");
+const mongoose = require("mongoose");
+const { Url } = require("../database/mongoUrls");
 
 /*
     get database

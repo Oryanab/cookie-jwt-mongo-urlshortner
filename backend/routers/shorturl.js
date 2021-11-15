@@ -4,9 +4,11 @@ const shortUrlRouter = express.Router();
 const databaseClass = require("./url_class").DataBase;
 const fs = require("fs");
 const path = require("path");
-
 const errorMiddleware = require("../middleware/urlMiddleware");
-
+const moment = require("moment");
+const mongoose = require("mongoose");
+const { Url } = require("../database/mongoUrls");
+const { User } = require("../database/mongoUsers");
 /*
     get database
 */
@@ -25,33 +27,71 @@ function saveDataBase(dataBaseJson) {
   fs.writeFileSync("database.json", Buffer.from(JSON.stringify(dataBaseJson)));
 }
 
+/*
+    function will upload new short url to db
+*/
+function uploadNewShortUrl(url, shortid) {
+  const newUrl = new Url({
+    creationDate: moment().format("MMMM Do YYYY, h:mm:ss a"),
+    redirectCount: 0,
+    originalUrl: url,
+    shorturl: shortid,
+  });
+  newUrl
+    .save()
+    .then((result) => {
+      console.log("added");
+    })
+    .catch((err) => {
+      console.log("faild");
+    });
+}
+
+function uploadNewShortUrlToUser(username, url, shortid) {
+  let newShortenUrl = new databaseClass(url, shortid);
+  User.update(
+    { username: username },
+    { $push: { user_urls: { $each: [newShortenUrl] } } }
+  )
+    .then((result) => {
+      console.log("added");
+    })
+    .catch((err) => {
+      console.log("faild");
+    });
+}
+
+function findUrlJsonByShortId(ShortId) {
+  Url.find({ shorturl: ShortId })
+    .then((result) => {
+      console.log(result);
+      return result;
+    })
+    .catch((err) => {
+      return err;
+    });
+}
+
 shortUrlRouter.post(
   "/",
-  errorMiddleware.middlewareUrlValidUrl,
-  errorMiddleware.middlewareUrlShortId,
+  //errorMiddleware.middlewareUrlValidUrl,
+  //errorMiddleware.middlewareUrlShortId,
   (req, res) => {
-    let databaseUrl = returnDataBase();
-    let allUsers = databaseUrl["users_database"];
-    let newShortenUrl = new databaseClass(req.body.url, req.body.shortid);
     if (req.body.username !== "Guest") {
       try {
-        const currentUser =
-          allUsers[
-            allUsers.indexOf(
-              allUsers.find(({ username }) => username === req.body.username)
-            )
-          ];
-        currentUser["user_urls"].push(newShortenUrl);
-        databaseUrl["short_urls"].push(newShortenUrl);
-        saveDataBase(databaseUrl);
-        res.status(200).json(newShortenUrl);
+        uploadNewShortUrlToUser(
+          req.body.username,
+          req.body.url,
+          req.body.shortid
+        );
+        uploadNewShortUrl(req.body.url, req.body.shortid);
+        res.status(200).json({ shorturl: req.body.shortid });
       } catch (e) {
         res.sendStatus(404);
       }
     } else {
-      databaseUrl["short_urls"].push(newShortenUrl);
-      saveDataBase(databaseUrl);
-      res.json(newShortenUrl);
+      uploadNewShortUrl(req.body.url, req.body.shortid);
+      res.status(200).json({ shorturl: req.body.shortid });
     }
   }
 );

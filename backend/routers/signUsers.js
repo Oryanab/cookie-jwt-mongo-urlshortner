@@ -5,6 +5,10 @@ const userDataBaseClass = require("./url_class").UserDataBase;
 const fs = require("fs");
 const path = require("path");
 const errorMiddleware = require("../middleware/userMiddleware");
+const mongoose = require("mongoose");
+const { User } = require("../database/mongoUsers");
+const jwt = require("jsonwebtoken");
+const bycrypt = require("bcrypt");
 
 /*
     get database
@@ -25,6 +29,38 @@ function saveDataBase(dataBaseJson) {
 }
 
 /*
+      passwordEncrypt
+*/
+async function encryptPassword(password) {
+  try {
+    const hashedPassword = await bycrypt.hash(password, 10);
+    return hashedPassword;
+  } catch (e) {
+    res.status(500).json({ message: "password creation failed" });
+  }
+}
+
+/*
+      sign up the user mongo
+*/
+function signUpNewUser(username, email, password) {
+  const newUser = new User({
+    username: username,
+    email: email,
+    password: password,
+    user_urls: [],
+  });
+  newUser
+    .save()
+    .then((result) => {
+      console.log("added");
+    })
+    .catch((err) => {
+      console.log("faild");
+    });
+}
+
+/*
       sign up the user
 */
 const usernameValidator = errorMiddleware.middlewareSignUpUsername;
@@ -32,18 +68,20 @@ const emailValidator = errorMiddleware.middlewareSignUpEmail;
 const passwordValidator = errorMiddleware.middlewareSignUpPassword;
 userRouter.post(
   "/sign-up",
-  usernameValidator,
-  emailValidator,
-  passwordValidator,
-  (req, res) => {
-    let database = returnDataBase();
-    let newUser = new userDataBaseClass(
-      req.body.name,
-      req.body.email,
-      req.body.password
-    );
-    database["users_database"].push(newUser);
-    saveDataBase(database);
+  // usernameValidator,
+  // emailValidator,
+  // passwordValidator,
+  async (req, res) => {
+    // let database = returnDataBase();
+    // let newUser = new userDataBaseClass(
+    //   req.body.name,
+    //   req.body.email,
+    //   req.body.password
+    // );
+    // database["users_database"].push(newUser);
+    // saveDataBase(database);
+    let encryptedPassword = await encryptPassword(req.body.password);
+    signUpNewUser(req.body.name, req.body.email, encryptedPassword);
     res.status(200).json({ message: "Successfully Registered", status: 200 });
   }
 );
@@ -52,21 +90,24 @@ userRouter.post(
       sign up the user
 */
 userRouter.post("/login", (req, res) => {
-  let database = returnDataBase();
-  let allUsers = database["users_database"];
+  //let database = returnDataBase();
+  //let allUsers = database["users_database"];
   try {
-    const currentUser =
-      allUsers[
-        allUsers.indexOf(allUsers.find(({ email }) => email === req.body.email))
-      ];
-    if (
-      currentUser.email === req.body.email &&
-      currentUser.password === req.body.password
-    ) {
-      res.status(200).json(currentUser);
-    } else {
-      res.status(401).json({ message: "Wrong Password", status: 401 });
-    }
+    //const currentUser = isEmailUserExist(req.body.email);
+    User.find({ email: req.body.email })
+      .then((currentUser) => {
+        if (bycrypt.compare(req.body.password, currentUser[0].password)) {
+          res.status(200).json({ username: currentUser[0].username });
+        } else {
+          res.status(401).json({ message: "Wrong Password", status: 401 });
+        }
+      })
+      .catch((err) => {
+        return false;
+      });
+    // allUsers[
+    //   allUsers.indexOf(allUsers.find(({ email }) => email === req.body.email))
+    // ];
   } catch (e) {
     res.status(404).json({ message: "User Must Sign Up", status: 404 });
   }
