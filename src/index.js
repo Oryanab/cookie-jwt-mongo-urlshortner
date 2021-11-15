@@ -14,7 +14,7 @@ const userInDiv = document.getElementById("user-in");
 const guestButton = document.getElementById("guest");
 
 window.addEventListener("load", async (e) => {
-  const authUrl = "/user/authorization";
+  const authUrl = "/user/check";
   try {
     const getUserData = await axios({
       method: "GET",
