@@ -36,9 +36,4 @@ const Url = mongoose.model("Url", urlSchema);
 
 module.exports = { Url };
 
-// {
-//     "creationDate": "November 3rd 2021, 1:55:15 pm",
-//     "redirectCount": 0,
-//     "originalUrl": "https://www.youtube.com/watch?v=Ud5xKCYQTjM&t=316s",
-//     "shorturl": "w3RRQywry"
-//   },
+
