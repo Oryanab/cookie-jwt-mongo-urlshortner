@@ -44,5 +44,5 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/user/check
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTW9zaGUiLCJpYXQiOjE2MzcwMTcwNzksImV4cCI6MTYzNzAxNzEzOX0.8NFnSCDs8kcMpgmLE5eyRQRC4oEqJ7JGdcAoqP2nvws
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiTW9zaGUiLCJpYXQiOjE2MzcwNDc1NjksImV4cCI6MTYzNzA0NzYyOX0.ZR_gqvKrACa7ggUGYj99qC1JKX239HOwsKZP9rKCWig
 
