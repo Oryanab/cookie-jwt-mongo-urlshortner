@@ -4,30 +4,16 @@ const userRouter = express.Router();
 const userDataBaseClass = require("./url_class").UserDataBase;
 const fs = require("fs");
 const path = require("path");
-const errorMiddleware = require("../middleware/userMiddleware");
+const {
+  middlewareSignUpUsername,
+  middlewareSignUpEmail,
+  middlewareSignUpPassword,
+} = require("../middleware/userMiddleware");
 const mongoose = require("mongoose");
 const { User } = require("../database/mongoUsers");
 const jwt = require("jsonwebtoken");
 const bycrypt = require("bcrypt");
 require("dotenv").config();
-
-/*
-    get database
-*/
-function returnDataBase() {
-  let dataBase = fs.readFileSync(
-    path.resolve(__dirname, "../../database.json")
-  );
-  let dataBaseJson = JSON.parse(dataBase.toString());
-  return dataBaseJson;
-}
-
-/*
-      save database
-  */
-function saveDataBase(dataBaseJson) {
-  fs.writeFileSync("database.json", Buffer.from(JSON.stringify(dataBaseJson)));
-}
 
 /*
       passwordEncrypt
@@ -64,17 +50,14 @@ function signUpNewUser(username, email, password) {
 /*
       sign up the user
 */
-const usernameValidator = errorMiddleware.middlewareSignUpUsername;
-const emailValidator = errorMiddleware.middlewareSignUpEmail;
-const passwordValidator = errorMiddleware.middlewareSignUpPassword;
 userRouter.post(
   "/sign-up",
-  // usernameValidator,
-  // emailValidator,
-  // passwordValidator,
+  middlewareSignUpUsername,
+  middlewareSignUpEmail,
+  middlewareSignUpPassword,
   async (req, res) => {
     let encryptedPassword = await encryptPassword(req.body.password);
-    signUpNewUser(req.body.name, req.body.email, encryptedPassword);
+    await signUpNewUser(req.body.name, req.body.email, encryptedPassword);
     res.status(200).json({ message: "Successfully Registered", status: 200 });
   }
 );
@@ -124,19 +107,6 @@ userRouter.get("/all-short-urls", (req, res) => {
     .catch((err) => {
       res.sendStatus(404);
     });
-  // let database = returnDataBase();
-  // let allUsers = database["users_database"];
-  // try {
-  //   const currentUser =
-  //     allUsers[
-  //       allUsers.indexOf(
-  //         allUsers.find(({ username }) => username === req.headers.username)
-  //       )
-  //     ];
-  //   res.status(200).json(currentUser.user_urls);
-  // } catch (e) {
-  //   res.sendStatus(404);
-  // }
 });
 
 userRouter.get("/check", authenticateToken, (req, res) => {

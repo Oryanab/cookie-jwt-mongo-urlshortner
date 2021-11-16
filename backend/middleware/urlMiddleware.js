@@ -6,17 +6,6 @@ const validator = require("validator");
 const mongoose = require("mongoose");
 const { Url } = require("../database/mongoUrls");
 
-/*
-    get database
-*/
-function returnDataBase() {
-  let dataBase = fs.readFileSync(
-    path.resolve(__dirname, "../../database.json")
-  );
-  let dataBaseJson = JSON.parse(dataBase.toString());
-  return dataBaseJson;
-}
-
 function middlewareUrlValidUrl(req, res, next) {
   if (validator.isURL(req.body.url)) {
     next();
@@ -26,20 +15,19 @@ function middlewareUrlValidUrl(req, res, next) {
 }
 
 function middlewareUrlShortId(req, res, next) {
-  let usersJsonData = returnDataBase()["short_urls"];
-  if (
-    !usersJsonData[
-      usersJsonData.indexOf(
-        usersJsonData.find(({ shorturl }) => shorturl === req.body.shortid)
-      )
-    ]
-  ) {
-    next();
-  } else {
-    res
-      .status(401)
-      .json({ message: "Please Try Converting again", status: 401 });
-  }
+  Url.find({ shorturl: req.body.shortid })
+    .then((result) => {
+      if (result.length === 0) {
+        next();
+      } else {
+        res
+          .status(401)
+          .json({ message: "Please Try Converting again", status: 401 });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "server error", status: 500 });
+    });
 }
 
 module.exports = { middlewareUrlShortId, middlewareUrlValidUrl };

@@ -3,6 +3,10 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const {
+  middlewareServerError,
+  middlewarePageNotFound,
+} = require("./middleware/userMiddleware");
 
 const shorturlRouter = require("./routers/shorturl");
 const redirectRouter = require("./routers/cybr");
@@ -11,6 +15,8 @@ const userRouter = require("./routers/signUsers");
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
+app.use(middlewareServerError);
+app.use(middlewarePageNotFound);
 
 app.use("/api/shorturl/", shorturlRouter);
 app.use("/cybr", redirectRouter);

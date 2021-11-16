@@ -4,28 +4,14 @@ const shortUrlRouter = express.Router();
 const databaseClass = require("./url_class").DataBase;
 const fs = require("fs");
 const path = require("path");
-const errorMiddleware = require("../middleware/urlMiddleware");
+const {
+  middlewareUrlShortId,
+  middlewareUrlValidUrl,
+} = require("../middleware/urlMiddleware");
 const moment = require("moment");
 const mongoose = require("mongoose");
 const { Url } = require("../database/mongoUrls");
 const { User } = require("../database/mongoUsers");
-/*
-    get database
-*/
-function returnDataBase() {
-  let dataBase = fs.readFileSync(
-    path.resolve(__dirname, "../../database.json")
-  );
-  let dataBaseJson = JSON.parse(dataBase.toString());
-  return dataBaseJson;
-}
-
-/*
-      save database
-  */
-function saveDataBase(dataBaseJson) {
-  fs.writeFileSync("database.json", Buffer.from(JSON.stringify(dataBaseJson)));
-}
 
 /*
     function will upload new short url to db
@@ -73,8 +59,8 @@ function findUrlJsonByShortId(ShortId) {
 
 shortUrlRouter.post(
   "/",
-  //errorMiddleware.middlewareUrlValidUrl,
-  //errorMiddleware.middlewareUrlShortId,
+  middlewareUrlShortId,
+  middlewareUrlValidUrl,
   (req, res) => {
     if (req.body.username !== "Guest") {
       try {

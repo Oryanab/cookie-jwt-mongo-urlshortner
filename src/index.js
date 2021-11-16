@@ -27,7 +27,7 @@ window.addEventListener("load", async (e) => {
     showUserPanel(getUserData.data.username);
     notyf.success("Successful Login!");
   } catch (err) {
-    notyf.error("please sign up");
+    notyf.success("please Login or enter as Guest");
   }
 });
 
@@ -73,6 +73,8 @@ function showUserPanerlButtons() {
     resetInputFields();
     hideUserPanel();
     hideUserPanerlButtons();
+    document.cookie =
+      "userToken= ; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/";
     notyf.success("Logged Out Successfully!");
   });
 }
