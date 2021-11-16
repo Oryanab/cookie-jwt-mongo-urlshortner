@@ -258,6 +258,8 @@ function createRow(link) {
 document
   .querySelector(".second-container")
   .addEventListener("click", async (e) => {
+    const parentDivBottom = document.getElementById("bottom");
+    parentDivBottom.innerHTML = "";
     const currentUser = document.getElementById("guestName").textContent;
     const allShortUrls = "/user/all-short-urls";
     const getUserData = await axios({

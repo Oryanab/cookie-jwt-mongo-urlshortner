@@ -86,52 +86,63 @@ userRouter.post("/login", (req, res) => {
   try {
     User.findOne({ email: req.body.email })
       .then((currentUser) => {
-        if (bycrypt.compare(req.body.password, currentUser.password)) {
-          // Auth The Cookie
-          const username = currentUser.username;
-          const loggedUser = { name: username };
-          // in terminal: require('crypto').randomBytes(64).toString('hex')
-          const accessToken = jwt.sign(loggedUser, process.env.SECRET_TOKEN, {
-            expiresIn: "1m",
+        bycrypt
+          .compare(req.body.password, currentUser.password)
+          .then((result) => {
+            if (result) {
+              const username = currentUser.username;
+              const loggedUser = { name: username };
+              const accessToken = jwt.sign(
+                loggedUser,
+                process.env.SECRET_TOKEN,
+                {
+                  expiresIn: "1m",
+                }
+              );
+              res.json({
+                username: currentUser.username,
+                accessToken: accessToken,
+              });
+            } else {
+              res.status(401).json({ message: "Wrong Password", status: 401 });
+            }
           });
-          //document.cookie = `accessToken:${accessToken}` + new Date(day.getDate() + 1);
-          res.json({
-            username: currentUser.username,
-            accessToken: accessToken,
-          });
-        } else {
-          res.status(401).json({ message: "Wrong Password", status: 401 });
-        }
       })
       .catch((err) => {
-        return false;
+        res.status(404).json({ message: "User Must Sign Up", status: 404 });
       });
   } catch (e) {
-    res.status(404).json({ message: "User Must Sign Up", status: 404 });
+    res.status(500).json({ message: "server Error", status: 500 });
   }
 });
 
 userRouter.get("/all-short-urls", (req, res) => {
-  let database = returnDataBase();
-  let allUsers = database["users_database"];
-  try {
-    const currentUser =
-      allUsers[
-        allUsers.indexOf(
-          allUsers.find(({ username }) => username === req.headers.username)
-        )
-      ];
-    res.status(200).json(currentUser.user_urls);
-  } catch (e) {
-    res.sendStatus(404);
-  }
+  User.findOne({ username: req.headers.username })
+    .then((userUnit) => {
+      res.status(200).json(userUnit.user_urls);
+    })
+    .catch((err) => {
+      res.sendStatus(404);
+    });
+  // let database = returnDataBase();
+  // let allUsers = database["users_database"];
+  // try {
+  //   const currentUser =
+  //     allUsers[
+  //       allUsers.indexOf(
+  //         allUsers.find(({ username }) => username === req.headers.username)
+  //       )
+  //     ];
+  //   res.status(200).json(currentUser.user_urls);
+  // } catch (e) {
+  //   res.sendStatus(404);
+  // }
 });
 
 userRouter.get("/check", authenticateToken, (req, res) => {
   res.json({ username: req.user.name });
 });
 // Auth jwt middleware
-
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
